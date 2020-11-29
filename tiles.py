@@ -22,3 +22,15 @@ class Tiles:
         self.i = i
         self.j = j
         self.tile = tile
+
+    @property
+    def i(self):
+        return self.i
+
+    @property
+    def j(self):
+        return self.j
+
+    @property
+    def category(self):
+        return self.tile
