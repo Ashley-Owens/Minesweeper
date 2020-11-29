@@ -1,6 +1,6 @@
 # Minesweeper game board
 
-from tiles import Tiles
+from boardTiles import Tiles
 import random
 
 class Board:
@@ -66,10 +66,35 @@ class Board:
                     # Places the mine in a valid random location on the game board.
                     self.board[random_i][random_j] = Tiles(random_i, random_j, Tiles.mine)
                     self.board[i][j] = Tiles(i, j, Tiles.zero)
-                        
+    
+    def number_tiles(self):
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if self.board[row][col].category == Tiles.mine:
+                    continue
+                adjacent_mines = 0
+
+                for i in [row+1, row-1, row]:
+                    for j in [col+1, col-1, col]:
+                        if (self.valid_tile(i, j) and self.board[i][j].category == Tiles.mine):
+                            adjacent_mines += 1
+                
+                # This might be in the wrong place
+                self.board[row][col] = Tiles(i, j, str(adjacent_mines))
 
 
+    def __str__(self):
+        return "\n".join(
+            [
+                "".join([f"{str(tile):2}" for tile in row]).rstrip()
+                for row in self.tiles
+            ]
+        )
 
+game = Board()
+print('Opening move')
+game.open_tile(2, 2)
+print(game)
 
 
     

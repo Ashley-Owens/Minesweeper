@@ -21,16 +21,18 @@ class Tiles:
     def __init__(self, i, j, tile):
         self.i = i
         self.j = j
-        self.tile = tile
+        self.tile = str(tile)
 
-    @property
-    def i(self):
+    
+    def get_i(self):
         return self.i
 
-    @property
-    def j(self):
+    def get_j(self):
         return self.j
 
     @property
     def category(self):
+        return self.tile
+
+    def __str__(self):
         return self.tile
