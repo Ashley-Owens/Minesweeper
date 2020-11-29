@@ -1,4 +1,4 @@
-# Minesweeper game board
+# Minesweeper game board with primary game logic
 
 from boardTiles import Tiles
 import random
@@ -10,7 +10,8 @@ class Board:
         self.cols = 8
         self.mines = 10
         self.opened = 0
-        self.game_state = False
+        self.game_won = False
+        self.game_lost = False
         self.board = self.__init__board__()
         self.tiles = self.__init__tiles__()
 
@@ -32,7 +33,7 @@ class Board:
         self.__init__()
 
     def open_tile(self, i, j):
-        if self.game_state or not self.valid_tile(i, j):
+        if self.game_lost or not self.valid_tile(i, j):
             return []
 
         if self.tiles[i][j].category != Tiles.closed:
@@ -41,6 +42,21 @@ class Board:
         if self.opened == 0:
             self.adjust_tiles(i, j)
             self.number_tiles()
+        
+        self.opened += 1
+        self.tiles[i][j] = self.board[i][j]
+
+        if self.opened + self.mines == (self.rows * self.cols):
+            self.game_won = True
+
+        if self.tiles[i][j].category == Tiles.mine:
+            self.game_lost = True
+
+        elif self.tiles[i][j].number >= 0:
+            if self.tiles[i][j].number == 0:
+                return self.open_adjacents(i, j, [self.tiles[i][j]])
+
+        return [self.tiles[i][j]]
 
 
     def valid_tile(self, i, j):
@@ -79,14 +95,34 @@ class Board:
                         if (self.valid_tile(i, j) and self.board[i][j].category == Tiles.mine):
                             adjacent_mines += 1
                 
-                # This might be in the wrong place
                 self.board[row][col] = Tiles(i, j, str(adjacent_mines))
+
+    def open_adjacents(self, row, col, opened_tile):
+        if self.valid_tile(row, col):
+            if self.board[row][col] == Tiles.mine:
+                self.tiles[row][col] = self.board[row][col]
+                return [Tiles(row, col, Tiles.mine)]
+            
+            for i in [row+1, row-1, row]:
+                for j in [col+1, col-1, col]:
+                    if (self.valid_tile(i, j) and self.tiles[i][j].category == Tiles.closed):
+                        self.opened += 1
+                        self.tiles[i][j] = self.board[i][j]
+                        opened_tile.append(self.board[i][j])
+
+                        if (self.opened + self.mines) == (self.rows * self.cols):
+                            self.game_won = True
+
+                        if self.board[i][j].category == Tiles.zero:
+                            self.open_adjacents(i, j, opened_tile)
+        return opened_tile
+
 
 
     def __str__(self):
         return "\n".join(
             [
-                "".join([f"{str(tile):2}" for tile in row]).rstrip()
+                "  ".join([f"{str(tile):2}" for tile in row]).rstrip()
                 for row in self.tiles
             ]
         )
@@ -94,6 +130,9 @@ class Board:
 game = Board()
 print('Opening move')
 game.open_tile(2, 2)
+print(game)
+print("second move")
+game.open_tile(2, 3)
 print(game)
 
 

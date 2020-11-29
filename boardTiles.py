@@ -13,10 +13,19 @@ class Tiles:
     seven = "7"
     eight = "8"
 
-    board_tiles = [mine, closed, zero, one, two, three, four, five, six, seven, eight]
-
-
-
+    tile_dict = {
+        mine: -2,
+        closed: -1,
+        zero: 0,
+        one: 1,
+        two: 2,
+        three: 3,
+        four: 4,
+        five: 5,
+        six: 6,
+        seven: 7,
+        eight: 8
+    }
 
     def __init__(self, i, j, tile):
         self.i = i
@@ -24,11 +33,10 @@ class Tiles:
         self.tile = str(tile)
 
     
-    def get_i(self):
-        return self.i
+    @property
+    def number(self):
+        return self.tile_dict[self.tile]
 
-    def get_j(self):
-        return self.j
 
     @property
     def category(self):
