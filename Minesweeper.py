@@ -41,22 +41,74 @@ def initializeScreen(x, y):
     icon = loadImage('gameicon.png')
     pygame.display.set_icon(icon)
     pygame.display.set_caption('Minesweeper')
-    drawBoard(screen)
+    coordinates = drawBoard(screen)
+    return screen, coordinates
 
 
 def drawBoard(screen):
 
+    # Uses itertools to alternate tile colors
+    colors = cycle((tile_color1, tile_color2))
+    coordinates = {}
+
+    for row in range(rows):
+        next(colors)
+
+        for col in range(cols):
+            # Creates a rectangle object for each position on game board and saves it in a dictionary
+            current = Rect(60*row, 60*col, boxX, boxY)
+            coordinates[col, row] = current
+
+            # Draws the tiles to the screen.
+            pygame.draw.rect(screen, next(colors), current, 0)
+    return coordinates
+
+def makeMove(screen, key):
+    i, j = key
+    lst = board.open_tile(i, j)
+    if board.get_board()[i][j].category == 'x':
+        showBoard(screen)
+    else:
+        updateBoard(screen)
+
+
+def blitText(screen, category, rect):
+    font = pygame.font.SysFont("ariel", 15)
+    label = font.render(category, True, blue)
+    screen.blit(label, rect)
+
+
+def updateBoard(screen):
+    colors_bg = cycle((bg_color1, bg_color2))
+    colors_fg = cycle((tile_color1, tile_color2))
+    mine_img = loadImage("mine.png")
+
+    for row in range(rows):
+        next(colors_bg)
+        next(colors_fg)
+
+        for col in range(cols):
+            category = board.get_board()[row][col].category
+
+            if category == "c" or category == "x":
+                current = Rect(60*row, 60*col, boxX, boxY)
+                pygame.draw.rect(screen, next(colors_fg), current, 0)
+            
+            else:
+                current = Rect(60*row, 60*col, boxX, boxY)
+                pygame.draw.rect(screen, next(colors_bg), current, 0)
+                blitText(screen, category, current)
+
+
+def showBoard(screen):
     colors = cycle((bg_color1, bg_color2))
     mine_img = loadImage("mine.png")
-    zero_img = loadImage("zero.png")
-    rect_list = []
 
     for row in range(rows):
         next(colors)
 
         for col in range(cols):
             current = Rect(60*row, 60*col, boxX, boxY)
-            rect_list.append(current)
             pygame.draw.rect(screen, next(colors), current, 0)
             category = board.get_board()[row][col].category
 
@@ -64,13 +116,10 @@ def drawBoard(screen):
             if category == "x":
                 image_rect = (8+(60*row), 5+(60*col))
                 screen.blit(mine_img, image_rect)
-            
             # Places zeroes on the board.
             # else:
             #     image_rect = (15+(60*row), 13+(60*col))
             #     screen.blit(zero_img, image_rect)
-    
-    print(rect_list)
 
 
 
@@ -78,7 +127,7 @@ def main():
     """
     Initializes game board screen and runs game loop.
     """
-    initializeScreen(x, y)
+    screen, coordinates = initializeScreen(x, y)
     clicks = []
 
     # Initiates the game loop.
@@ -91,19 +140,18 @@ def main():
             if event.type == pygame.QUIT:
                 quit()
 
-            # # Locates click coordinates in dict and adds red outline to enhance footprint.
-            # if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            #     for click in range(0, 1):
-            #         for key, value in coordinates.items():
-            #             if value.collidepoint(event.pos):
-            #                 clicks.append(key)
-            #                 rect = pygame.Rect(value)
-            #                 inflated = rect.inflate(60, 60)
-            #                 pygame.draw.rect(background, red, inflated, 4)
-            #                 screen.blit(background, (0, 0))
-            #                 update_board(screen, background)
-            #                 pygame.display.update()
-            #     print(clicks)
+            # Locates click coordinates in dict and adds red outline to enhance footprint.
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                
+                for key, value in coordinates.items():
+                    if value.collidepoint(event.pos):
+                        clicks.append(key)
+                        makeMove(screen, key)
+
+                        # rect = pygame.Rect(value)
+                        
+                        pygame.display.update()
+                print(clicks)
 
 
 if __name__ == '__main__':
@@ -116,8 +164,7 @@ if __name__ == '__main__':
     bg_color2 = (150, 113, 57)
     tile_color1 = (144, 207, 63)
     tile_color2 = (176, 233, 102)
-    # myFont = pygame.font.SysFont("ariel", 15)
-    # label = myFont.render(str(category), 20, (0, 0, 0))
-    # screen.blit(label, current)
+    blue = (0, 0, 225)
+    
 
     main()
