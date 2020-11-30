@@ -1,6 +1,6 @@
 # Minesweeper game board with primary game logic
 
-from boardTiles import Tiles
+from BoardTiles import Tiles
 import random
 
 class Board:
@@ -28,6 +28,8 @@ class Board:
         return [[Tiles(i, j, Tiles.closed) for j in range(self.cols)]
             for i in range(self.rows)]
     
+    def get_board(self):
+        return self.board
 
     def new_game(self):
         self.__init__()
@@ -127,13 +129,13 @@ class Board:
             ]
         )
 
-game = Board()
-print('Opening move')
-game.open_tile(2, 2)
-print(game)
-print("second move")
-game.open_tile(2, 3)
-print(game)
+# game = Board()
+# print('Opening move')
+# game.open_tile(2, 2)
+# print(game)
+# print("second move")
+# game.open_tile(2, 3)
+# print(game)
 
 
     

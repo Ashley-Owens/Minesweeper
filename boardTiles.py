@@ -42,5 +42,6 @@ class Tiles:
     def category(self):
         return self.tile
 
+
     def __str__(self):
         return self.tile

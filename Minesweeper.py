@@ -7,6 +7,9 @@ try:
     import sys, os, pygame
     from socket import *
     from pygame.locals import *
+    from GameBoard import Board
+    from BoardTiles import Tiles
+    from itertools import cycle
 except ImportError:
     print("Could not load module: ImportError.")
     sys.exit(2)
@@ -31,25 +34,57 @@ def loadImage(name):
 
 
 
+def initializeScreen(x, y):
+    # Initializes the PyGame screen and background.
+    pygame.init()
+    screen = pygame.display.set_mode((x, y))
+    icon = loadImage('gameicon.png')
+    pygame.display.set_icon(icon)
+    pygame.display.set_caption('Minesweeper')
+    drawBoard(screen)
+
+
+def drawBoard(screen):
+
+    colors = cycle((bg_color1, bg_color2))
+    mine_img = loadImage("mine.png")
+    zero_img = loadImage("zero.png")
+    rect_list = []
+
+    for row in range(rows):
+        next(colors)
+
+        for col in range(cols):
+            current = Rect(60*row, 60*col, boxX, boxY)
+            rect_list.append(current)
+            pygame.draw.rect(screen, next(colors), current, 0)
+            category = board.get_board()[row][col].category
+
+            # Places mine images on the board.
+            if category == "x":
+                image_rect = (8+(60*row), 5+(60*col))
+                screen.blit(mine_img, image_rect)
+            
+            # Places zeroes on the board.
+            # else:
+            #     image_rect = (15+(60*row), 13+(60*col))
+            #     screen.blit(zero_img, image_rect)
+    
+    print(rect_list)
+
+
+
 def main():
     """
     Initializes game board screen and runs game loop.
     """
-    pygame.init()
-    x, y = 700, 740
-
-    # Initializes the PyGame screen, background, and mapping dict.
-    screen = pygame.display.set_mode((x, y))
-    icon = loadImage('gameicon.png')
-    # background = loadImage('board_bg.jpg')
-    pygame.display.set_icon(icon)
-    pygame.display.set_caption('Minesweeper')
-    # coordinates = update_board(screen, background)
-    pygame.display.update()
+    initializeScreen(x, y)
     clicks = []
 
     # Initiates the game loop.
     while True:
+        
+        pygame.display.flip()
 
         # Clicking on window exit button ends game.
         for event in pygame.event.get():
@@ -70,4 +105,19 @@ def main():
             #                 pygame.display.update()
             #     print(clicks)
 
-main()
+
+if __name__ == '__main__':
+    board = Board()
+    rows, cols = 8, 8
+    x, y = 480, 480
+    boxX = x/8
+    boxY = y/8
+    bg_color1 = (184, 147, 92)
+    bg_color2 = (150, 113, 57)
+    tile_color1 = (144, 207, 63)
+    tile_color2 = (176, 233, 102)
+    # myFont = pygame.font.SysFont("ariel", 15)
+    # label = myFont.render(str(category), 20, (0, 0, 0))
+    # screen.blit(label, current)
+
+    main()
