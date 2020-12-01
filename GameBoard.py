@@ -12,21 +12,20 @@ class Board:
         self.opened = 0
         self.game_won = False
         self.game_lost = False
-        self.board = self.__init__board__()
-        self.tiles = self.__init__tiles__()
+        self.board = False
+        self.tiles = False
 
-    def __init__board__(self):
-        mines = random.sample(range(0, self.rows * self.cols), self.mines)
-        row = (
-            lambda i, j: Tiles.mine
-            if i * self.cols + j in mines
-            else Tiles.zero
-        )
-        return [[Tiles(i, j, row(i, j)) for j in range(self.cols)] for i in range(self.rows)]
+        if self.board is False:
+            mines = random.sample(range(0, self.rows * self.cols), self.mines)
+            row = (
+                lambda i, j: Tiles.mine
+                if i * self.cols + j in mines
+                else Tiles.zero
+            )
+            self.board = [[Tiles(i, j, row(i, j)) for j in range(self.cols)] for i in range(self.rows)]
 
-    def __init__tiles__(self):
-        return [[Tiles(i, j, Tiles.closed) for j in range(self.cols)]
-            for i in range(self.rows)]
+        if self.tiles is False:
+            self.tiles = [[Tiles(i, j, Tiles.closed) for j in range(self.cols)] for i in range(self.rows)]
     
     def get_board(self):
         return self.board
@@ -54,8 +53,7 @@ class Board:
         if self.tiles[i][j].category == Tiles.mine:
             self.game_lost = True
 
-        elif self.tiles[i][j].number >= 0:
-            if self.tiles[i][j].number == 0:
+        elif self.tiles[i][j].number == 0:
                 return self.open_adjacents(i, j, [self.tiles[i][j]])
 
         return [self.tiles[i][j]]
@@ -97,7 +95,7 @@ class Board:
                         if (self.valid_tile(i, j) and self.board[i][j].category == Tiles.mine):
                             adjacent_mines += 1
                 
-                self.board[row][col] = Tiles(i, j, str(adjacent_mines))
+                    self.board[row][col] = Tiles(i, j, str(adjacent_mines))
 
     def open_adjacents(self, row, col, opened_tile):
         if self.valid_tile(row, col):
@@ -129,7 +127,8 @@ class Board:
             ]
         )
 
-# game = Board()
+game = Board()
+print(game.tiles[0][0].category)
 # print('Opening move')
 # game.open_tile(2, 2)
 # print(game)

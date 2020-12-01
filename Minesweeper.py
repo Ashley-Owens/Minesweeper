@@ -68,15 +68,14 @@ def makeMove(screen, coordinates, key):
     # Stores the row, col coordinates of the desired move.
     i, j = key
 
-    # Ends game if user selects a bomb.
-    if board.get_board()[i][j].category == 'x':
-        board.game_lost = True
+    # Opens the desired tile and adjacent tiles, saving them to a list.
+    tiles = board.open_tile(i, j)
+
+    if board.game_lost == True:
         showBoard(screen)
-
+        blitText(screen, "Game Over", (x/2, y/2))
+    
     else:
-        # Opens the desired tile and adjacent tiles, saving them to a list.
-        tiles = board.open_tile(i, j)
-
         # Changes the tile states on the game board.
         removeTile(screen, coordinates, tiles)
 
@@ -92,6 +91,7 @@ def removeTile(screen, coordinates, tiles):
         # Stores the current rect object associated with the tile's coordinates.
         current = coordinates[row, col]
         pygame.draw.rect(screen, next(colors_bg), current, 0)
+        pygame.draw.rect(screen, white, current, 1)
         blitText(screen, category, current)
 
 
@@ -159,6 +159,7 @@ if __name__ == '__main__':
     bg_color2 = (150, 113, 57)
     tile_color1 = (144, 207, 63)
     tile_color2 = (176, 233, 102)
+    white = (255, 255, 255)
     blue = (0, 0, 225)
     
 
