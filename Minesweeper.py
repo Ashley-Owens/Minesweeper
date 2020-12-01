@@ -63,41 +63,42 @@ def drawBoard(screen):
             pygame.draw.rect(screen, next(colors), current, 0)
     return coordinates
 
-def makeMove(screen, key):
+def makeMove(screen, coordinates, key):
+
+    # Stores the row, col coordinates of the desired move.
     i, j = key
-    lst = board.open_tile(i, j)
+
+    # Ends game if user selects a bomb.
     if board.get_board()[i][j].category == 'x':
+        board.game_lost = True
         showBoard(screen)
+
     else:
-        updateBoard(screen)
+        # Opens the desired tile and adjacent tiles, saving them to a list.
+        tiles = board.open_tile(i, j)
+
+        # Changes the tile states on the game board.
+        removeTile(screen, coordinates, tiles)
+
+
+def removeTile(screen, coordinates, tiles):
+    colors_bg = cycle((bg_color1, bg_color2))
+    
+    for tile in tiles:
+    
+        row, col = tile.row, tile.col
+        category = tile.category
+        
+        # Stores the current rect object associated with the tile's coordinates.
+        current = coordinates[row, col]
+        pygame.draw.rect(screen, next(colors_bg), current, 0)
+        blitText(screen, category, current)
 
 
 def blitText(screen, category, rect):
     font = pygame.font.SysFont("ariel", 15)
     label = font.render(category, True, blue)
     screen.blit(label, rect)
-
-
-def updateBoard(screen):
-    colors_bg = cycle((bg_color1, bg_color2))
-    colors_fg = cycle((tile_color1, tile_color2))
-    mine_img = loadImage("mine.png")
-
-    for row in range(rows):
-        next(colors_bg)
-        next(colors_fg)
-
-        for col in range(cols):
-            category = board.get_board()[row][col].category
-
-            if category == "c" or category == "x":
-                current = Rect(60*row, 60*col, boxX, boxY)
-                pygame.draw.rect(screen, next(colors_fg), current, 0)
-            
-            else:
-                current = Rect(60*row, 60*col, boxX, boxY)
-                pygame.draw.rect(screen, next(colors_bg), current, 0)
-                blitText(screen, category, current)
 
 
 def showBoard(screen):
@@ -116,12 +117,7 @@ def showBoard(screen):
             if category == "x":
                 image_rect = (8+(60*row), 5+(60*col))
                 screen.blit(mine_img, image_rect)
-            # Places zeroes on the board.
-            # else:
-            #     image_rect = (15+(60*row), 13+(60*col))
-            #     screen.blit(zero_img, image_rect)
-
-
+        
 
 def main():
     """
@@ -146,12 +142,11 @@ def main():
                 for key, value in coordinates.items():
                     if value.collidepoint(event.pos):
                         clicks.append(key)
-                        makeMove(screen, key)
-
-                        # rect = pygame.Rect(value)
-                        
+                        makeMove(screen, coordinates, key)
                         pygame.display.update()
                 print(clicks)
+
+
 
 
 if __name__ == '__main__':

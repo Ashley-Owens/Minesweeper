@@ -34,9 +34,17 @@ class Tiles:
 
     
     @property
+    def row(self):
+        return self.i
+
+    @property
+    def col(self):
+        return self.j
+
+
+    @property
     def number(self):
         return self.tile_dict[self.tile]
-
 
     @property
     def category(self):
