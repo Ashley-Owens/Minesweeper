@@ -40,6 +40,9 @@ class Board:
         if self.tiles[i][j].category != Tiles.closed:
             return []
 
+        if self.game_won:
+            return []
+
         if self.opened == 0:
             self.adjust_tiles(i, j)
             self.number_tiles()

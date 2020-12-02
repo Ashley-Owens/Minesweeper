@@ -70,38 +70,41 @@ def makeMove(screen, coordinates, key):
 
     # Opens the desired tile and adjacent tiles, saving them to a list.
     tiles = board.open_tile(i, j)
-
-    if board.game_lost == True:
-        showBoard(screen, coordinates)
-        blitText(screen, "Game Over", (x//2, y//2))
-    
-    elif board.game_won == True:
-        showBoard(screen, coordinates)
-        blitText(screen, "Game Won!", (x//2, y//2))
-    
-    else:
-        # Changes the tile states on the game board.
-        removeTile(screen, coordinates, tiles)
+    removeTile(screen, coordinates, tiles)
 
 
 def removeTile(screen, coordinates, tiles):
     
     for tile in tiles:
         # Stores the current rect object associated with the tile's coordinates.
+        row, col = tile.row, tile.col
         category = tile.category
-        current = coordinates[tile.row, tile.col]
+        current = coordinates[row, col]
 
-        for i in range(rows):
-            for j in range(cols):
-                if (i == tile.row and j == tile.col):
-                    if (i + j) % 2 == 0:
-                        pygame.draw.rect(screen, bg_color1, current, 0)
+        if (row + col) % 2 == 0:
+            pygame.draw.rect(screen, bg_color1, current, 0)
 
-                    else:
-                        pygame.draw.rect(screen, bg_color2, current, 0)
-
+        else:
+            pygame.draw.rect(screen, bg_color2, current, 0)
         
-        blitText(screen, category, current)
+        
+        if category == "x":
+            image_rect = (8+(60*col), 5+(60*row))
+            screen.blit(loadImage(category +'.png'), image_rect)
+        
+        
+        elif int(category) > 0:
+            image_rect = (16+(60*col), 17+(60*row))
+            screen.blit(loadImage(category +'.png'), image_rect)
+
+        if board.game_lost == True:
+            image_rect = ((x/2-60), (y/2-60))
+            screen.blit(loadImage('game-over.png'), image_rect)
+    
+        elif board.game_won == True:
+            image_rect = ((x/2-60), (y/2-60))
+            screen.blit(loadImage('trophy.png'), image_rect)
+
 
 def placeFlag(screen, key):
     row, col = key
@@ -118,7 +121,7 @@ def blitText(screen, category, rect):
 
 def showBoard(screen, coordinates):
     colors = cycle((bg_color1, bg_color2))
-    mine_img = loadImage("mine.png")
+    mine_img = loadImage("x.png")
 
     for row in range(rows):
         next(colors)
