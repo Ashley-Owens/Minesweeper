@@ -72,8 +72,12 @@ def makeMove(screen, coordinates, key):
     tiles = board.open_tile(i, j)
 
     if board.game_lost == True:
-        showBoard(screen)
-        blitText(screen, "Game Over", (x/2, y/2))
+        showBoard(screen, coordinates)
+        blitText(screen, "Game Over", (x//2, y//2))
+    
+    elif board.game_won == True:
+        showBoard(screen, coordinates)
+        blitText(screen, "Game Won!", (x//2, y//2))
     
     else:
         # Changes the tile states on the game board.
@@ -81,19 +85,30 @@ def makeMove(screen, coordinates, key):
 
 
 def removeTile(screen, coordinates, tiles):
-    colors_bg = cycle((bg_color1, bg_color2))
     
     for tile in tiles:
-    
-        row, col = tile.row, tile.col
-        category = tile.category
-        
         # Stores the current rect object associated with the tile's coordinates.
-        current = coordinates[row, col]
-        pygame.draw.rect(screen, next(colors_bg), current, 0)
-        pygame.draw.rect(screen, white, current, 1)
+        category = tile.category
+        current = coordinates[tile.row, tile.col]
+
+        for i in range(rows):
+            for j in range(cols):
+                if (i == tile.row and j == tile.col):
+                    if (i + j) % 2 == 0:
+                        pygame.draw.rect(screen, bg_color1, current, 0)
+
+                    else:
+                        pygame.draw.rect(screen, bg_color2, current, 0)
+
+        
         blitText(screen, category, current)
 
+def placeFlag(screen, key):
+    row, col = key
+    flag_img = loadImage("flag.png")
+    image_rect = (16+(60*col), 15+(60*row))
+    screen.blit(flag_img, image_rect)
+    
 
 def blitText(screen, category, rect):
     font = pygame.font.SysFont("ariel", 15)
@@ -101,7 +116,7 @@ def blitText(screen, category, rect):
     screen.blit(label, rect)
 
 
-def showBoard(screen):
+def showBoard(screen, coordinates):
     colors = cycle((bg_color1, bg_color2))
     mine_img = loadImage("mine.png")
 
@@ -109,13 +124,13 @@ def showBoard(screen):
         next(colors)
 
         for col in range(cols):
-            current = Rect(60*row, 60*col, boxX, boxY)
+            current = coordinates[row, col]
             pygame.draw.rect(screen, next(colors), current, 0)
             category = board.get_board()[row][col].category
 
             # Places mine images on the board.
             if category == "x":
-                image_rect = (8+(60*row), 5+(60*col))
+                image_rect = (8+(60*col), 5+(60*row))
                 screen.blit(mine_img, image_rect)
         
 
@@ -125,11 +140,13 @@ def main():
     """
     screen, coordinates = initializeScreen(x, y)
     clicks = []
+    print(board.get_mines())
 
     # Initiates the game loop.
     while True:
         
         pygame.display.flip()
+        
 
         # Clicking on window exit button ends game.
         for event in pygame.event.get():
@@ -137,14 +154,29 @@ def main():
                 quit()
 
             # Locates click coordinates in dict and adds red outline to enhance footprint.
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+
+                # Checks for clicks in order to removes tiles.
+                if event.button == 1:
                 
-                for key, value in coordinates.items():
-                    if value.collidepoint(event.pos):
-                        clicks.append(key)
-                        makeMove(screen, coordinates, key)
-                        pygame.display.update()
-                print(clicks)
+                    for key, value in coordinates.items():
+                        if value.collidepoint(event.pos):
+                            clicks.append(key)
+                            makeMove(screen, coordinates, key)
+                            pygame.display.update()
+                            
+
+                # Checks for right clicks to place a flag.
+                if event.button == 3:
+                    for key, value in coordinates.items():
+                        if value.collidepoint(event.pos):
+                            placeFlag(screen, key)
+                            pygame.display.update()
+                            print("The mines are located at: ", board.get_mines())
+                            # print(key)
+
+                # print(clicks)
+        
 
 
 

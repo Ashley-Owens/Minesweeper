@@ -47,14 +47,14 @@ class Board:
         self.opened += 1
         self.tiles[i][j] = self.board[i][j]
 
-        if self.opened + self.mines == (self.rows * self.cols):
+        if (self.opened + self.mines) == (self.rows * self.cols):
             self.game_won = True
 
         if self.tiles[i][j].category == Tiles.mine:
             self.game_lost = True
 
         elif self.tiles[i][j].number == 0:
-                return self.open_adjacents(i, j, [self.tiles[i][j]])
+            return self.open_adjacents(i, j, [self.tiles[i][j]])
 
         return [self.tiles[i][j]]
 
@@ -69,13 +69,14 @@ class Board:
         for i in [row+1, row-1, row]:
             for j in [col+1, col-1, col]:
 
-                # if the starting tile is valid and it contains a mine.
+                # if the tile is valid and it contains a mine.
                 if self.valid_tile(i, j) and self.board[i][j].category == Tiles.mine:
                     random_i = random.randint(0, self.rows - 1)
                     random_j = random.randint(0, self.cols - 1)
 
                     # Search for a valid location on the game board to place the mine.
-                    while self.board[random_i][random_j].category == Tiles.mine or (abs(row-random_i) <= 1 and abs(col-random_j) <= 1):
+                    while self.board[random_i][random_j].category == Tiles.mine:
+                    # or (abs(row-random_i) <= 1 and abs(col-random_j) <= 1):
                         random_i = random.randint(0, self.rows - 1)
                         random_j = random.randint(0, self.cols - 1)
                     
@@ -95,7 +96,7 @@ class Board:
                         if (self.valid_tile(i, j) and self.board[i][j].category == Tiles.mine):
                             adjacent_mines += 1
                 
-                    self.board[row][col] = Tiles(i, j, str(adjacent_mines))
+                self.board[row][col] = Tiles(row, col, str(adjacent_mines))
 
     def open_adjacents(self, row, col, opened_tile):
         if self.valid_tile(row, col):
@@ -118,6 +119,15 @@ class Board:
         return opened_tile
 
 
+    def get_mines(self):
+        mines = []
+        for i in range(self.rows):
+            for j in range(self.cols):
+                if self.board[i][j].category == Tiles.mine:
+                    mines.append((i, j))
+        return mines
+
+
 
     def __str__(self):
         return "\n".join(
@@ -128,9 +138,10 @@ class Board:
         )
 
 game = Board()
-print(game.tiles[0][0].category)
-# print('Opening move')
-# game.open_tile(2, 2)
+# print(game.tiles[0][0].category)
+print('Opening move')
+print(game)
+game.open_tile(2, 2)
 # print(game)
 # print("second move")
 # game.open_tile(2, 3)
