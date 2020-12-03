@@ -1,7 +1,7 @@
 # Author: Ashley Owens
 # Date: 12/7/2020
 # Description: CS 325, Portfolio Project
-# Minesweeper Tile class for numbering tiles, tracking closed tiles, and tracking mines.
+# Minesweeper Tile class for tracking tile numbers, unopened tiles, and mines.
 
 class Tiles:
     """

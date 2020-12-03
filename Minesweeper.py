@@ -75,7 +75,7 @@ def drawBoard(screen):
 
         # Creates a rectangle object for each position on game board and saves it in a dictionary
         for col in range(cols):
-            current = Rect(60*row, 60*col, boxX, boxY)
+            current = Rect(boxX*row, boxY*col, boxX, boxY)
             coordinates[col, row] = current
 
             # Draws the tiles to the screen.
@@ -116,7 +116,7 @@ def gameOver(screen, image):
         screen (object): Pygame surface object
         image (.PNG): image
     """
-    image_rect = ((x/2-60), (y/2-60))
+    image_rect = ((x/2-boxX), (y/2-boxY))
     screen.blit(image, image_rect)
 
 
@@ -142,12 +142,12 @@ def removeTile(screen, coordinates, tiles):
         
         # Displays mines
         if category == "x":
-            image_rect = (8+(60*col), 5+(60*row))
+            image_rect = (8+(boxY*col), 5+(boxX*row))
             screen.blit(loadImage(category +'.png'), image_rect)
         
         # Displays the tile's number
         elif int(category) > 0:
-            image_rect = (16+(60*col), 17+(60*row))
+            image_rect = (16+(boxY*col), 17+(boxX*row))
             screen.blit(loadImage(category +'.png'), image_rect)
 
 
@@ -161,7 +161,7 @@ def placeFlag(screen, key):
     """
     row, col = key
     flag_img = loadImage("flag.png")
-    image_rect = (16+(60*col), 15+(60*row))
+    image_rect = (16+(boxY*col), 15+(boxX*row))
     screen.blit(flag_img, image_rect)
 
 
@@ -185,7 +185,7 @@ def showBoard(screen, coordinates):
 
             # Places mine images on the board.
             if category == "x":
-                image_rect = (8+(60*col), 5+(60*row))
+                image_rect = (8+(boxY*col), 5+(boxX*row))
                 screen.blit(mine_img, image_rect)
 
 
@@ -256,9 +256,9 @@ if __name__ == '__main__':
     # Initializes game board colors.
     bg_color1 = (184, 147, 92)
     bg_color2 = (150, 113, 57)
-    tile_color1 = (144, 207, 63)
-    tile_color2 = (176, 233, 102)
-
+    tile_color1 = (125, 195, 72) 
+    tile_color2 = (166, 227, 120)
+    
     # Initializes Pygame surface, blits game board, stores rect objects.
     screen = initializeScreen(x, y)
     coordinates = drawBoard(screen)
