@@ -248,7 +248,7 @@ if __name__ == '__main__':
     rows, cols = 8, 8
     mines = 10
     x, y = 480, 480
-    boxX, boxY = x/rows, y/cols
+    boxX, boxY = x//rows, y//cols
 
     # Initializes game board object.
     board = Board(rows, cols, mines)
