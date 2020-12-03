@@ -54,6 +54,19 @@ class Board:
     def get_board(self):
         return self.board
 
+    def get_mines(self):
+        """
+        Helper method for obtaining current minefield.
+        Returns:
+            list: all mine coordinates in an (i, j) tuple
+        """
+        mines = []
+        for i in range(self.rows):
+            for j in range(self.cols):
+                if self.board[i][j].category == Tiles.mine:
+                    mines.append((i, j))
+        return mines
+
     def new_game(self):
         self.__init__()
 
@@ -91,7 +104,7 @@ class Board:
             self.game_lost = True
 
         # Opens adjacent tiles as needed.
-        elif self.tiles[i][j].number == 0:
+        elif self.tiles[i][j].category == Tiles.zero:
             return self.open_adjacents(i, j, [self.tiles[i][j]])
 
         return [self.tiles[i][j]]
@@ -186,19 +199,6 @@ class Board:
                         if self.board[i][j].category == Tiles.zero:
                             self.open_adjacents(i, j, opened_tile)
         return opened_tile
-
-    def get_mines(self):
-        """
-        Helper method for obtaining current minefield.
-        Returns:
-            list: all mine coordinates in an (i, j) tuple
-        """
-        mines = []
-        for i in range(self.rows):
-            for j in range(self.cols):
-                if self.board[i][j].category == Tiles.mine:
-                    mines.append((i, j))
-        return mines
 
 
 
