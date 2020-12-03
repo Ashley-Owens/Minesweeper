@@ -116,7 +116,7 @@ def gameOver(screen, image):
         screen (object): Pygame surface object
         image (.PNG): image
     """
-    image_rect = ((x/2-boxX), (y/2-boxY))
+    image_rect = ((x//2-boxX), (y//2-boxY))
     screen.blit(image, image_rect)
 
 
