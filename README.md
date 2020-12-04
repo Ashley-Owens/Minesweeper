@@ -11,6 +11,6 @@ This is my Pygame interpretation of the classic Windows game Minesweeper.
 ![Numbers](images/openedGrid.png)
 
 3. Right-click to place a flag over suspected mine locations. In order to win, you must clear all tiles except for the ones containing mines.   
-![Flags](images/placeFlags.png)
+
 
 
