@@ -20,12 +20,12 @@ The easiest way to play is on [repl.it](https://repl.it/talk/share/Minesweeper/8
 The alternative approach for playing has a better UI experience but requires some set-up:
 1. Please install the latest version of [Python](https://www.python.org/downloads/)
 2. Install pip and Pygame
-* Please use the following command in your terminal to check whether pip is installed: `python -m pip --version`. If not, navigate to [Pip](https://pip.pypa.io/en/stable/installing/) and complete the installation process.    
-* Otherwise, please install the latest version of Pygame by typing the following into your terminal: `python3 -m pip install pygame`. If you have trouble installing Pygame, please visit Pygame's [Getting Started](https://www.pygame.org/wiki/GettingStarted) page.   
+  * Please use the following command in your terminal to check whether pip is installed: `python -m pip --version`. If not, navigate to [Pip](https://pip.pypa.io/en/stable/installing/) and complete the installation process.
+  * Otherwise, please install the latest version of Pygame by typing the following into your terminal: `python3 -m pip install pygame`. If you have trouble installing Pygame, please visit Pygame's [Getting Started](https://www.pygame.org/wiki/GettingStarted) page.   
 3. On GitHub, click the `Code` button in the Minesweeper repository. Download the zip files to your desktop and ensure the files are named `Minesweeper`.   
 4. In your terminal type the following commands to navigate to the Minesweeper file folder:    
-* `cd Desktop`
-* `cd Minesweeper`
+  * `cd Desktop`
+  * `cd Minesweeper`
 5. Enter `python3 Minesweeper.py` and begin playing.   
 
 Thank you so much for visiting my project and happy gaming!
