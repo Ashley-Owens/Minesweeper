@@ -215,12 +215,12 @@ def main():
                 quit()
             
             # Pressing the space bar enables game cheat.
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+            if event.type == KEYDOWN:
+                if event.key == K_SPACE:
                     print("The mines are located at: ", board.get_mines())
 
             # Checks for mouseclicks.
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == MOUSEBUTTONDOWN:
 
                 # Left click removes tiles using coordinates dictionary.
                 if event.button == 1:
