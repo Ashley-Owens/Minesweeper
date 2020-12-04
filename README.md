@@ -10,10 +10,12 @@ This is my Pygame interpretation of the classic Windows game Minesweeper.
 ![Numbers](images/openedGrid.png) 
 3. Right-click to place a flag over suspected mine locations. In order to win, you must clear all tiles except for the ones containing mines.   
 
-## How to play: Repl.it
+## How to play
+
+### Repl.it
 The easiest way to play is on [repl.it](https://repl.it/talk/share/Minesweeper/84316). I recommend resizing the repl.it window a bit larger to improve your game play experience. There is a game cheat if you need help, it's an empty key, can you find it?
 
-## How to play: Terminal
+### Terminal   
 The alternative approach for playing has a better UI experience but requires some set-up:
 1. Please install the latest version of [Python](https://www.python.org/downloads/)
 2. Install pip and Pygame
