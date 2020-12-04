@@ -2,6 +2,8 @@
 
 This is my Pygame interpretation of the classic Windows game Minesweeper.
 
+![Minesweeper](images/Minesweeper.gif)
+
 ### Game Rules
 1. The first click is a freebie, you won't ever click on a mine.
 
