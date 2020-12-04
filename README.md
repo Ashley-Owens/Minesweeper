@@ -14,7 +14,7 @@ This is my Pygame interpretation of the classic Windows game Minesweeper.
 ## How to play
 
 ### Repl.it
-The easiest way to play is on [repl.it](https://repl.it/talk/share/Minesweeper/84316). I recommend resizing the repl.it window a bit larger to improve your game play experience. When you're ready click the `Run` button.   
+The easiest way to play is on [repl.it](https://repl.it/talk/share/Minesweeper/84316). I recommend resizing the repl.it window a bit larger to improve your game play experience. When you're ready, click the `Run` button.   
 
 ### Terminal   
 The alternative approach for playing has a better UI experience but requires some set-up:
