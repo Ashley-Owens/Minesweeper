@@ -213,8 +213,13 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
+            
+            # Pressing the space bar enables game cheat.
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    print("The mines are located at: ", board.get_mines())
 
-            # Locates click coordinates in dictionary.
+            # Checks for mouseclicks.
             if event.type == pygame.MOUSEBUTTONDOWN:
 
                 # Left click removes tiles using coordinates dictionary.
@@ -231,23 +236,21 @@ def main():
                             else:
                                 makeMove(screen, coordinates, key)
 
-                            pygame.display.update()
-                            
-
                 # Right click places a flag in suspected mine locations.
                 if event.button == 3:
                     for key, value in coordinates.items():
                         if value.collidepoint(event.pos):
                             placeFlag(screen, key)
-                            pygame.display.update()
-                            print("The mines are located at: ", board.get_mines())
+
 
 
 if __name__ == '__main__':
     # Initializes screen and game board dimensions.
-    rows, cols = 8, 8
+    rows = cols = 8
     mines = 10
-    x, y = 480, 480
+    x = y = 480
+
+    # When changing board dimensions, try to keep these variables close to 60
     boxX, boxY = x//rows, y//cols
 
     # Initializes game board object.
