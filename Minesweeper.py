@@ -12,7 +12,6 @@ try:
     from itertools import cycle
 except ImportError:
     print("Could not load module: ImportError.")
-    sys.exit(2)
 
 
 def loadImage(name):
