@@ -13,14 +13,14 @@ This is my Pygame interpretation of the classic Windows game Minesweeper.
 3. Right-click to place a flag over suspected mine locations. In order to win, you must clear all tiles except for the ones containing mines.   
 
 ## How to play
-The easiest way to play is on [repl.it](https://repl.it/talk/share/Minesweeper/84316). There is a game cheat if you need help, but you'll have to figure it out. I also recommend changing the repl.it window size to improve your game play experience.         
+The easiest way to play is on [repl.it](https://repl.it/talk/share/Minesweeper/84316). I recommend resizing the repl.it window a bit larger to improve your game play experience. There is a game cheat if you need help, can you find it?
 
-The alternative approach has a better UI and gameplay experience but requires the following steps:
+The alternative approach for playing has a better UI experience but requires the following steps:
 1. Please install the latest version of [Python](https://www.python.org/downloads/)
-2. Please use the following command to check whether pip is installed: `python -m pip --version`. If not, navigate to [Pip](https://pip.pypa.io/en/stable/installing/) and complete the installation process. Otherwise, please install the latest version of PyGame by typing the following into your console: `python3 -m pip install pygame` . If you have trouble installing PyGame, please visit PyGame's [Getting Started](https://www.pygame.org/wiki/GettingStarted) page.   
+2. Please use the following command in your terminal to check whether pip is installed: `python -m pip --version`. If not, navigate to [Pip](https://pip.pypa.io/en/stable/installing/) and complete the installation process. Otherwise, please install the latest version of PyGame by typing the following into your terminal: `python3 -m pip install pygame`. If you have trouble installing PyGame, please visit PyGame's [Getting Started](https://www.pygame.org/wiki/GettingStarted) page.   
 3. On GitHub, click the `Code` button in the Minesweeper repository. Download the zip files to your desktop.   
-4. Open up your console and change directories to the Minesweeper file folder.   
-5. Type `python3 Minesweeper.py` into the console and begin playing.   
+4. Change directories in your terminal to the Minesweeper file folder.   
+5. Enter `python3 Minesweeper.py` and begin playing.   
 
 Thank you so much for visiting my project and happy gaming!
 
