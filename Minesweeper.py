@@ -4,8 +4,7 @@
 # Uses PyGame GUI to implement Minesweeper.
 
 try:
-    import sys, os, pygame
-    from socket import *
+    import os, pygame, random
     from pygame.locals import *
     from GameBoard import Board
     from BoardTiles import Tiles
@@ -163,6 +162,13 @@ def placeFlag(screen, key):
     image_rect = (16+(boxY*col), 15+(boxX*row))
     screen.blit(flag_img, image_rect)
 
+def solvePuzzle(screen, coordinates):
+    if board.opened == 0:
+        i = random.randint(0, rows-1)
+        j = random.randint(0, cols-1)
+        makeMove(screen, coordinates, (i, j))
+
+
 
 def showBoard(screen, coordinates):
     """
@@ -213,10 +219,13 @@ def main():
             if event.type == pygame.QUIT:
                 quit()
             
-            # Pressing the space bar enables game cheat.
+            # Pressing different keys enables game cheats.
             if event.type == KEYDOWN:
                 if event.key == K_SPACE:
                     print("The mines are located at: ", board.get_mines())
+
+                if event.key == K_RETURN:
+                    print("Solving puzzle...", solvePuzzle(screen, coordinates))
 
             # Checks for mouseclicks.
             if event.type == MOUSEBUTTONDOWN:
