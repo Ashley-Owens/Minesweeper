@@ -163,36 +163,35 @@ def placeFlag(screen, key):
     screen.blit(flag_img, image_rect)
 
 def solvePuzzle(screen, coordinates):
-    if board.opened == 0:
-        i = random.randint(0, rows-1)
-        j = random.randint(0, cols-1)
-        makeMove(screen, coordinates, (i, j))
-
-
-
-def showBoard(screen, coordinates):
     """
-    Enables all tiles to be uncovered and displayed.
+    Game cheat solves the puzzle when the player hits the enter key.
     Args:
-        screen (object): Pygame surface
+        screen (obj): Pygame surface object 
         coordinates (dict): key = (row, col), value = associated rectangle object
+    Returns:
+        str: string indicating puzzle was solved
     """
-    colors = cycle((bg_color1, bg_color2))
-    mine_img = loadImage("x.png")
+    # Continues opening game tiles until the game is won.
+    while board.game_won is False:
 
-    for row in range(rows):
-        next(colors)
+        # Uses a random tile to open the game board.
+        if board.opened == 0:
+            i = random.randint(0, rows-1)
+            j = random.randint(0, cols-1)
+            makeMove(screen, coordinates, (i, j))
 
-        for col in range(cols):
-            current = coordinates[row, col]
-            pygame.draw.rect(screen, next(colors), current, 0)
-            category = board.get_board()[row][col].category
+        # After the game board is opened, iterates through all tiles.
+        else:
+            for row in range(rows):
+                for col in range(cols):
+                    category = board.get_board()[row][col].category
 
-            # Places mine images on the board.
-            if category == "x":
-                image_rect = (8+(boxY*col), 5+(boxX*row))
-                screen.blit(mine_img, image_rect)
-
+                    # Places flags on mines and opens non-mine tiles.
+                    if category == "x":
+                        placeFlag(screen, (row, col))
+                    else:
+                        makeMove(screen, coordinates, (row, col))
+    return "Solved."
 
 def blitText(screen, category, rect):
     """
@@ -249,7 +248,6 @@ def main():
                     for key, value in coordinates.items():
                         if value.collidepoint(event.pos):
                             placeFlag(screen, key)
-
 
 
 if __name__ == '__main__':
