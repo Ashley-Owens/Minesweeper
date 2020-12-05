@@ -6,12 +6,11 @@
 try:
     import os, pygame, random
     from pygame.locals import *
-    from GameBoard import Board
+    from GameBoard import Game
     from BoardTiles import Tiles
     from itertools import cycle
 except ImportError:
     print("Could not load module: ImportError.")
-
 
 def loadImage(name):
     """
@@ -30,9 +29,7 @@ def loadImage(name):
             image = image.convert_alpha()
     except FileNotFoundError:
         print('Cannot load image: ', fullname)
-
     return image
-
 
 def initializeScreen(x, y):
     """
@@ -50,7 +47,6 @@ def initializeScreen(x, y):
     pygame.display.set_icon(icon)
     pygame.display.set_caption('Minesweeper')
     return screen
-
 
 def drawBoard(screen):
     """
@@ -78,7 +74,6 @@ def drawBoard(screen):
 
     return coordinates
 
-
 def makeMove(screen, coordinates, key):
     """
     Given user selected coordinates, opens tiles and calls helper functions to display 
@@ -92,17 +87,16 @@ def makeMove(screen, coordinates, key):
     i, j = key
 
     # Opens the desired tile and adjacent tiles, saving them to a list.
-    tiles = board.open_tile(i, j)
+    tiles = game.open_tile(i, j)
     removeTile(screen, coordinates, tiles)
 
     # Displays Game Over image
-    if board.game_lost == True:
+    if game.game_lost == True:
         gameOver(screen, loadImage('game-over.png'))
 
     # Displays Game Won image
-    elif board.game_won == True:
+    elif game.game_won == True:
         gameOver(screen, loadImage('trophy.png'))
-       
 
 def gameOver(screen, image):
     """
@@ -113,7 +107,6 @@ def gameOver(screen, image):
     """
     image_rect = ((x//2-boxX), (y//2-boxY))
     screen.blit(image, image_rect)
-
 
 def removeTile(screen, coordinates, tiles):
     """
@@ -145,7 +138,6 @@ def removeTile(screen, coordinates, tiles):
             image_rect = (16+(boxY*col), 17+(boxX*row))
             screen.blit(loadImage(category +'.png'), image_rect)
 
-
 def placeFlag(screen, key):
     """
     Places a flag in the center of a selected rectangle object. 
@@ -167,10 +159,10 @@ def solvePuzzle(screen, coordinates):
         coordinates (dict): key = (row, col), value = associated rectangle object
     """
     # Continues opening game tiles until the game is won.
-    while board.game_won is False:
+    while game.game_won is False:
 
         # Uses a random tile to open the game board.
-        if board.opened == 0:
+        if game.opened == 0:
             i = random.randint(0, rows-1)
             j = random.randint(0, cols-1)
             makeMove(screen, coordinates, (i, j))
@@ -179,7 +171,7 @@ def solvePuzzle(screen, coordinates):
         else:
             for row in range(rows):
                 for col in range(cols):
-                    category = board.get_board()[row][col].category
+                    category = game.get_board()[row][col].category
 
                     # Places flags on mines and opens non-mine tiles.
                     if category == "x":
@@ -214,10 +206,10 @@ def main():
             # Pressing different keys enables game cheats.
             if event.type == KEYDOWN:
                 if event.key == K_SPACE:
-                    print("The mines are located at: ", board.get_mines())
+                    print("The mines are located at: ", game.get_mines())
 
                 if event.key == K_RETURN:
-                    if board.game_lost is False and board.game_won is False:
+                    if game.game_lost is False and game.game_won is False:
                         solvePuzzle(screen, coordinates)
 
             # Checks for mouseclicks.
@@ -229,9 +221,9 @@ def main():
                         if value.collidepoint(event.pos):
                             
                             # Allows user to open tiles when game is lost to view mine locations.
-                            if board.game_lost is True:
+                            if game.game_lost is True:
                                 i, j = key
-                                removeTile(screen, coordinates, [board.get_board()[i][j]])
+                                removeTile(screen, coordinates, [game.get_board()[i][j]])
                             
                             # Opens tiles to play the game.
                             else:
@@ -254,7 +246,7 @@ if __name__ == '__main__':
     boxX, boxY = x//rows, y//cols
 
     # Initializes game board object.
-    board = Board(rows, cols, mines)
+    game = Game(rows, cols, mines)
 
     # Initializes game board colors.
     bg_color1 = (184, 147, 92)

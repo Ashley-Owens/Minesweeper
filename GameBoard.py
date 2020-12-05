@@ -6,7 +6,7 @@
 from BoardTiles import Tiles
 import random
 
-class Board:
+class Game:
     """
     Contains Minesweeper game logic.
     """
@@ -24,10 +24,10 @@ class Board:
         self.opened = 0
         self.game_won = False
         self.game_lost = False
-        self.board = self.__init__board__()
+        self.board = self.__init__minefield__()
         self.tiles = self.__init__tiles__()
 
-    def __init__board__(self):
+    def __init__minefield__(self):
         """
         Initializes game board placing mines in random locations.
         Returns:
@@ -42,14 +42,6 @@ class Board:
         Initializes matrix of game tiles using Tiles class.
         """
         return [[Tiles(i, j, Tiles.closed) for j in range(self.cols)] for i in range(self.rows)]
-    
-    def __str__(self):
-        """
-        Useful for debugging and printing game board to the console
-        Returns:
-            string: game board
-        """
-        return "\n".join(["  ".join([f"{str(tile):2}" for tile in row]).rstrip() for row in self.tiles])
     
     def get_board(self):
         return self.board
@@ -80,21 +72,23 @@ class Board:
         Returns:
             list: opened tile objects 
         """
+        # Checks for invalid moves.
         if self.game_lost or not self.valid_tile(i, j):
             return []
-
         if self.tiles[i][j].category != Tiles.closed:
             return []
-
         if self.game_won:
             return []
 
         # Redistributes mine field and numbers tiles for the first move of the game.
         if self.opened == 0:
-            self.adjust_tiles(i, j)
-            self.number_tiles()
+            self.adjust_minefield(i, j)
+            self.enumerate_tiles()
         
+        # Counts the number of tiles opened for checking game winning moves.
         self.opened += 1
+
+        # Sets the current closed tile equal to the opened board tile.
         self.tiles[i][j] = self.board[i][j]
 
         # Checks for game ending moves.
@@ -122,7 +116,7 @@ class Board:
             return True
         return False
     
-    def adjust_tiles(self, row, col):
+    def adjust_minefield(self, row, col):
         """
         Helper method used only for the opening move to randomly reallocate mine field.
         Args:
@@ -130,24 +124,26 @@ class Board:
             col (int): user selected column
         """
         # Iterates through the user selected 3x3 grid.
-        for i in [row+1, row-1, row]:
-            for j in [col+1, col-1, col]:
+        for i in [row-1, row, row+1]:
+            for j in [col-1, col, col+1]:
 
                 # if the tile is valid and it contains a mine.
                 if self.valid_tile(i, j) and self.board[i][j].category == Tiles.mine:
                     random_i = random.randint(0, self.rows - 1)
                     random_j = random.randint(0, self.cols - 1)
 
-                    # Searches for locations to place the mine outside of the 3x3 starting grid.
+                    # Searches for locations to place the mine outside of the starting position's adjacent tiles.
                     while self.board[random_i][random_j].category == Tiles.mine or (abs(row-random_i) <= 1 and abs(col-random_j) <= 1):
                         random_i = random.randint(0, self.rows - 1)
                         random_j = random.randint(0, self.cols - 1)
                     
                     # Places the mine in a valid random location on the game board.
                     self.board[random_i][random_j] = Tiles(random_i, random_j, Tiles.mine)
+
+                    # All mines removed from starting position thus set the tile to zero.
                     self.board[i][j] = Tiles(i, j, Tiles.zero)
     
-    def number_tiles(self):
+    def enumerate_tiles(self):
         """
         Iterates through game board enumerating tiles according to their proximity to mines.
         """
@@ -156,16 +152,16 @@ class Board:
             for col in range(self.cols):
                 if self.board[row][col].category == Tiles.mine:
                     continue
-                adjacent_mines = 0
+                mines = 0
 
-                # Calculates number of mines for each 3x3 grid.
-                for i in [row+1, row-1, row]:
-                    for j in [col+1, col-1, col]:
+                # Calculates number of mines surrounding each tile.
+                for i in [row-1, row, row+1]:
+                    for j in [col-1, col, col+1]:
                         if (self.valid_tile(i, j) and self.board[i][j].category == Tiles.mine):
-                            adjacent_mines += 1
+                            mines += 1
                 
                 # Sets each game board tile's mine proximity number.
-                self.board[row][col] = Tiles(row, col, str(adjacent_mines))
+                self.board[row][col] = Tiles(row, col, str(mines))
 
     def open_adjacents(self, row, col, opened_tile):
         """
@@ -183,9 +179,9 @@ class Board:
                 self.tiles[row][col] = self.board[row][col]
                 return [Tiles(row, col, Tiles.mine)]
             
-            # Iterates through 3x3 grid, only opening closed tiles adjacent to a zero tile.
-            for i in [row+1, row-1, row]:
-                for j in [col+1, col-1, col]:
+            # Iterates through neighboring tiles, only opening closed tiles adjacent to a zero tile.
+            for i in [row-1, row, row+1]:
+                for j in [col-1, col, col+1]:
                     if (self.valid_tile(i, j) and self.tiles[i][j].category == Tiles.closed):
                         self.opened += 1
                         self.tiles[i][j] = self.board[i][j]
@@ -200,22 +196,3 @@ class Board:
                             self.open_adjacents(i, j, opened_tile)
         return opened_tile
 
-
-
-
-# game = Board(8, 8, 10)
-# print(game.tiles[0][0].category)
-# print('Opening move')
-# print(game)
-# game.open_tile(2, 2)
-# print(game)
-# print("second move")
-# game.open_tile(2, 3)
-# print(game)
-
-
-    
-
-
-
-    
