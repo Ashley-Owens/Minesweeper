@@ -29,19 +29,35 @@ class Game:
 
     def __init__minefield__(self):
         """
-        Initializes game board placing mines in random locations.
+        Initializes the game board placing mines in random locations.
         Returns:
             matrix: game board matrix filled with mines
         """
+        # Creates random locations of mines according to the size of the game board.
         mines = random.sample(range(0, self.rows * self.cols), self.mines)
-        row = (lambda i, j: Tiles.mine if i * self.cols + j in mines else Tiles.zero)
-        return [[Tiles(i, j, row(i, j)) for j in range(self.cols)] for i in range(self.rows)]
+        
+        # Uses a helper method to initialize tile categories: mine or zero.
+        return [[Tiles(i, j, self.create_tile(mines, i, j)) for j in range(self.cols)] for i in range(self.rows)]
 
     def __init__tiles__(self):
         """
-        Initializes matrix of game tiles using Tiles class.
+        Initializes matrix of closed game tiles using Tiles class.
         """
         return [[Tiles(i, j, Tiles.closed) for j in range(self.cols)] for i in range(self.rows)]
+    
+    def create_tile(self, mines, row, col):
+        """
+        Helper method for initializing board tiles to contain either a mine or a zero.
+        Args:
+            mines (list): list of random mine locations within board size
+            row (int): row coordinates
+            col (int): col coordinate
+        Returns:
+            object: Tiles category
+        """
+        if row * self.cols + col in mines:
+            return Tiles.mine
+        return Tiles.zero
     
     def get_board(self):
         return self.board
