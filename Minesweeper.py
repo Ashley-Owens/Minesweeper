@@ -18,8 +18,6 @@ def loadImage(name):
     Loads an image for blitting.
     Args:
         name(string): filename to be loaded
-    Raises:
-        SystemExit: if image not found
     Returns:
         image: blittable image object
     """
@@ -32,7 +30,6 @@ def loadImage(name):
             image = image.convert_alpha()
     except FileNotFoundError:
         print('Cannot load image: ', fullname)
-        raise SystemExit
 
     return image
 
@@ -164,12 +161,10 @@ def placeFlag(screen, key):
 
 def solvePuzzle(screen, coordinates):
     """
-    Game cheat solves the puzzle when the player hits the enter key.
+    Game cheat solves the puzzle when player hits the enter key.
     Args:
         screen (obj): Pygame surface object 
         coordinates (dict): key = (row, col), value = associated rectangle object
-    Returns:
-        str: string indicating puzzle was solved
     """
     # Continues opening game tiles until the game is won.
     while board.game_won is False:
@@ -191,7 +186,6 @@ def solvePuzzle(screen, coordinates):
                         placeFlag(screen, (row, col))
                     else:
                         makeMove(screen, coordinates, (row, col))
-    return "Solved."
 
 def blitText(screen, category, rect):
     """
@@ -203,8 +197,7 @@ def blitText(screen, category, rect):
     """
     font = pygame.font.SysFont("ariel", 15)
     label = font.render(category, True, tile_color1)
-    screen.blit(label, rect)
-        
+    screen.blit(label, rect) 
 
 def main():
     """
@@ -224,7 +217,8 @@ def main():
                     print("The mines are located at: ", board.get_mines())
 
                 if event.key == K_RETURN:
-                    print("Solving puzzle...", solvePuzzle(screen, coordinates))
+                    if board.game_lost is False and board.game_won is False:
+                        solvePuzzle(screen, coordinates)
 
             # Checks for mouseclicks.
             if event.type == MOUSEBUTTONDOWN:
