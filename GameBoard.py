@@ -75,9 +75,6 @@ class Game:
                     mines.append((i, j))
         return mines
 
-    def new_game(self):
-        self.__init__()
-
     def open_tile(self, i, j):
         """
         Primary game logic for opening a tile. Uses helper methods and performs tile validation, mine 
@@ -166,6 +163,8 @@ class Game:
         # Iterates through entire game board.
         for row in range(self.rows):
             for col in range(self.cols):
+
+                # Doesn't count mines adjacent to mine tiles.
                 if self.board[row][col].category == Tiles.mine:
                     continue
                 mines = 0
@@ -181,34 +180,29 @@ class Game:
 
     def open_adjacents(self, row, col, opened_tile):
         """
-        Uses recursion to open adjacent tiles.
+        Uses DFS on the system stack to recursively open adjacent tiles.
         Args:
             row (int): user selected row
             col (int): user selected column
             opened_tile (obj): tile object
         Returns:
             list: opened tile objects
-        """
-        # Doesn't open adjacent mines.
-        if self.valid_tile(row, col):
-            if self.board[row][col] == Tiles.mine:
-                self.tiles[row][col] = self.board[row][col]
-                return [Tiles(row, col, Tiles.mine)]
-            
-            # Iterates through neighboring tiles, only opening closed tiles adjacent to a zero tile.
-            for i in [row-1, row, row+1]:
-                for j in [col-1, col, col+1]:
-                    if (self.valid_tile(i, j) and self.tiles[i][j].category == Tiles.closed):
-                        self.opened += 1
-                        self.tiles[i][j] = self.board[i][j]
-                        opened_tile.append(self.board[i][j])
+        """        
+        # Iterates through neighboring tiles, only opening closed tiles adjacent to a zero tile.
+        for i in [row-1, row, row+1]:
+            for j in [col-1, col, col+1]:
+                if (self.valid_tile(i, j) and self.tiles[i][j].category == Tiles.closed):
+                    self.opened += 1
+                    self.tiles[i][j] = self.board[i][j]
+                    opened_tile.append(self.board[i][j])
 
-                        # Checks for a game winning move while opening adjacent tiles.
-                        if (self.opened + self.mines) == (self.rows * self.cols):
-                            self.game_won = True
+                    # Checks for a game winning move while opening adjacent tiles.
+                    if (self.opened + self.mines) == (self.rows * self.cols):
+                        self.game_won = True
 
-                        # If an adjacent tile is zero, recursively opens that tile's adjacent tiles.
-                        if self.board[i][j].category == Tiles.zero:
-                            self.open_adjacents(i, j, opened_tile)
+                    # If an adjacent tile is zero, recursively opens that tile's adjacent tiles.
+                    if self.board[i][j].category == Tiles.zero:
+                        self.open_adjacents(i, j, opened_tile)
+
         return opened_tile
 
